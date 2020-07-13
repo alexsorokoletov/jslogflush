@@ -16,93 +16,64 @@ class JsLogFlush
 if (!('logflush' in window)) {
 (function() {
 
-window.logflush = {
-    log: function(s, t = '', g = '') {
-        if (arguments.length <= 1) {
-            if (typeof s == 'undefined')
-			{
-				flushEx();
-			}
-            else if (typeof s == 'object')
-			{
-				window.oldsole.log(JSON.stringify(s) + ' ' + t + JSON.stringify(arguments));
-				log(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
-			}
-			else
-			{
-				window.oldsole.log(s + ' ' + t + JSON.stringify(arguments));
-				log(s + ' ' + JSON.stringify(arguments));
-			}
-        }
-		else if (typeof s == 'object')
-			{
-				window.oldsole.log(JSON.stringify(s) + ' ' + t + JSON.stringify(arguments));
-				log(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
-			}
-			else
-			{
-				window.oldsole.log(s + ' ' + t + JSON.stringify(arguments));
-				log(s + ' ' + JSON.stringify(arguments));
-			}
-    },
-	warn: function(s, t = '', g = '') {
-		if (arguments.length <= 1) {
-            if (typeof s == 'undefined')
-			{
-				flushEx();
-			}
-            else if (typeof s == 'object')
-			{
-				window.oldsole.warn(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
-				log(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
-			}
-			else
-			{
-				window.oldsole.warn(s + ' ' + JSON.stringify(arguments));
-				log(s + ' ' + JSON.stringify(arguments));
-			}
-        }
-		else if (typeof s == 'object')
-			{
-				window.oldsole.warn(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
-				log(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
-			}
-			else
-			{
-				window.oldsole.warn(s + ' ' + JSON.stringify(arguments));
-				log(s + ' ' + JSON.stringify(arguments));
-			}
-    },
-	error: function(s, t = '', g = '') {
-		
-        if (arguments.length <= 1) {
-            if (typeof s == 'undefined')
-			{
-				flushEx();
-			}
-            else if (typeof s == 'object')
-			{
-				window.oldsole.error(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
-				log(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
-			}
-			else
-			{
-				window.oldsole.error(s + ' ' + JSON.stringify(arguments));
-				log(s + ' ' + JSON.stringify(arguments));
-			}
-        }
-		else if (typeof s == 'object')
-			{
-				window.oldsole.error(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
-				log(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
-			}
-			else
-			{
-				window.oldsole.error(s + ' ' + JSON.stringify(arguments));
-				log(s + ' ' + JSON.stringify(arguments));
-			}
+window.originalConsoleWarn = console.warn.bind(console);
+window.originalConsoleDebug = console.debug.bind(console);
+window.originalConsoleInfo = console.info.bind(console);
+window.originalConsoleError = console.error.bind(console);
+window.originalConsoleLog = console.log.bind(console);
+console.log = function () {
+    window.originalConsoleLog.apply(this, arguments);
+    var allArgs = arguments;
+    logWithType('LOG', allArgs);
+}
+
+console.warn = function () {
+    window.originalConsoleWarn.apply(this, arguments);
+    var allArgs = arguments;
+    logWithType('WARN', allArgs);
+}
+
+console.error = function () {
+    window.originalConsoleError.apply(this, arguments);
+    var allArgsForError = [].slice.call(arguments); 
+    if (console.trace){
+        allArgsForError.push(console.trace());
+    }   
+    logWithType('ERROR', allArgsForError);
+}
+
+console.info = function () {
+    window.originalConsoleInfo.apply(this, arguments);
+    var allArgs = arguments;
+    logWithType('INFO', allArgs);
+}
+
+console.debug = function () {
+    window.originalConsoleDebug.apply(this, arguments);
+    var allArgs = arguments;
+    logWithType('DEBUG', allArgs);
+}
+
+window.logflush =  1;
+
+function logWithType(typeOfLog, allArgs) {
+    var msg = typeOfLog + ': ';
+    if (typeof allArgs[0] === 'string') {
+        msg = allArgs[0];
     }
-};
+    for (var i = 1; i < allArgs.length; i++) {
+        var type = typeof allArgs[i];
+        switch (type) {
+            case 'object':
+                msg += ' ' + JSON.stringify(allArgs[i]);
+            default:
+                msg += ' ' + allArgs[i];
+
+        }
+    }
+    logToRemote(msg);
+}
+
 <%SUBST_CONSOLE%>
 
 // Log session ID:
@@ -128,7 +99,7 @@ var iStamp0 = <%STAMP_INIT%>;
 var iStamp = 0;
 var nBkFlag = 0;
 
-function log(s) {
+function logToRemote(s) {
     if (!ID || !s) return false;
     s = (iStamp0? (now()- iStamp0)+ '\\t' : '')+ s+ '\\n';
     if (encodeURIComponent(sBuff + s).length > BUFF_SIZE)
@@ -190,9 +161,7 @@ function outExpr(x) {
 CODE;
 
     const JS_SUBST_CONSOLE = <<<CODE
-// Substitute console object so console.log() become alias of logflush.log()
-window.oldsole = window.console;
-window.console = window.logflush;
+// TBD
 CODE;
 
     const JS_STAMP_INIT_ON = 'now()';
