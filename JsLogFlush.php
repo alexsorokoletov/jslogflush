@@ -44,7 +44,7 @@ window.logflush = {
         }));
     },
 	error: function(s) {
-		window.error(s,arguments);
+		window.oldsole.error(s,arguments);
         if (arguments.length <= 1) {
             if (typeof s == 'undefined') flushEx();
             else log(s);
