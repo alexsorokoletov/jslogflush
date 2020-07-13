@@ -55,17 +55,34 @@ console.debug = function () {
 };
 
 window.logflush =  1;
+function altStringify(a) {
+    var output = a + '\r\n{\r\n';
+    for (var property in a) {
+      output += '  ' + property + ': ' + a[property]+';\r\n';
+    }
+    return output + '}';
+}
 
 function logWithType(typeOfLog, allArgs) {
     var msg = typeOfLog + ': ';
     if (typeof allArgs[0] === 'string') {
-        msg = allArgs[0];
+        msg += allArgs[0];
     }
     for (var i = 1; i < allArgs.length; i++) {
         var type = typeof allArgs[i];
         switch (type) {
             case 'object':
-                msg += ' ' + JSON.stringify(allArgs[i]);
+                var obj = allArgs[i];
+                if (!!obj){
+                   var json = JSON.stringify(obj);
+                   if (json === '{}'){
+                       json = altStringify(obj);
+                   }
+                   msg += ' ' + obj + json;
+                } else {
+                   msg += ' ' + obj;
+                }
+                break;
             default:
                 msg += ' ' + allArgs[i];
 
@@ -310,7 +327,7 @@ CODE;
         if (!$this->sAppUrl)
             return false;
         $id = $this->generateId();
-        $b_in = self::getHost($this->sAppUrl)== self::getServerVar('HTTP_HOST');
+        $b_in = true; /* self::getHost($this->sAppUrl)== self::getServerVar('HTTP_HOST');*/
         $file = $this->buildFilename($id);
         if (!$file)
             return false;
