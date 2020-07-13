@@ -539,7 +539,7 @@ CODE;
      * @return string
      */
     static protected function buildScriptUrl() {
-        return 'http://'. self::getServerVar('SERVER_NAME').
+        return 'https://'. self::getServerVar('SERVER_NAME').
             self::stripUrlQuery(self::getServerVar('REQUEST_URI'));
     }
 
