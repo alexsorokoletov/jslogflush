@@ -72,7 +72,7 @@ function logWithType(typeOfLog, allArgs) {
         }
     }
     logToRemote(msg);
-}
+};
 
 <%SUBST_CONSOLE%>
 
