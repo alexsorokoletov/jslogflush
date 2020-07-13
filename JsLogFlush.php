@@ -74,6 +74,26 @@ function logWithType(typeOfLog, allArgs) {
     logToRemote(msg);
 };
 
+window.onerror = function (msg, url, lineNo, columnNo, error) {
+    var string = msg.toLowerCase();
+    var substring = "script error";
+    if (string.indexOf(substring) > -1){
+      console.error(msg);
+    } else {
+      var message = [
+        'Message: ' + msg,
+        'URL: ' + url,
+        'Line: ' + lineNo,
+        'Column: ' + columnNo,
+        'Error object: ' + JSON.stringify(error)
+      ].join(' - ');
+  
+      console.error(message);
+    }
+  
+    return false;
+};
+
 <%SUBST_CONSOLE%>
 
 // Log session ID:
