@@ -17,7 +17,7 @@ if (!('logflush' in window)) {
 (function() {
 
 window.logflush = {
-    log: function(s, t = '') {
+    log: function(s, t = '', g = '') {
         if (arguments.length <= 1) {
             if (typeof s == 'undefined')
 			{
@@ -45,7 +45,7 @@ window.logflush = {
 				log(s + ' ' + JSON.stringify(arguments));
 			}
     },
-	warn: function(s) {
+	warn: function(s, t = '', g = '') {
 		if (arguments.length <= 1) {
             if (typeof s == 'undefined')
 			{
@@ -73,7 +73,7 @@ window.logflush = {
 				log(s + ' ' + JSON.stringify(arguments));
 			}
     },
-	error: function(s) {
+	error: function(s, t = '', g = '') {
 		
         if (arguments.length <= 1) {
             if (typeof s == 'undefined')
