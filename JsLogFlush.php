@@ -18,6 +18,7 @@ if (!('logflush' in window)) {
 
 window.logflush = {
     log: function(s) {
+		window.oldsole.log(s,arguments);
         if (arguments.length <= 1) {
             if (typeof s == 'undefined') flushEx();
             else log(s);
@@ -30,6 +31,7 @@ window.logflush = {
         }));
     },
 	warn: function(s) {
+		window.oldsole.warn(s,arguments);
         if (arguments.length <= 1) {
             if (typeof s == 'undefined') flushEx();
             else log(s);
@@ -42,6 +44,7 @@ window.logflush = {
         }));
     },
 	error: function(s) {
+		window.error(s,arguments);
         if (arguments.length <= 1) {
             if (typeof s == 'undefined') flushEx();
             else log(s);
@@ -142,6 +145,7 @@ CODE;
 
     const JS_SUBST_CONSOLE = <<<CODE
 // Substitute console object so console.log() become alias of logflush.log()
+window.oldsole = window.console;
 window.console = window.logflush;
 CODE;
 
@@ -312,7 +316,7 @@ CODE;
      * @return string|false
      */
     protected function flush($id) {
-        $s_deny = $this->buildResponse(self::RESPONSE_DENY);
+        $s_deny = $this->buildResponse('');
         if (!$this->sAppUrl)
             return $s_deny;
         $buff = self::getRequestVar('data');
@@ -329,7 +333,7 @@ CODE;
             !$t || $this->iStamp0 - $t > $this->aCfg['expire']* 3600)
             return $s_deny;
         file_put_contents($this->aCfg['dir']. $file, $buff, FILE_APPEND);
-        return $this->buildResponse(self::RESPONSE_OK);
+        return $this->buildResponse('');
     }
 
     /**
