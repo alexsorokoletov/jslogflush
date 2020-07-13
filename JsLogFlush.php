@@ -25,13 +25,13 @@ console.log = function () {
     window.originalConsoleLog.apply(this, arguments);
     var allArgs = arguments;
     logWithType('LOG', allArgs);
-}
+};
 
 console.warn = function () {
     window.originalConsoleWarn.apply(this, arguments);
     var allArgs = arguments;
     logWithType('WARN', allArgs);
-}
+};
 
 console.error = function () {
     window.originalConsoleError.apply(this, arguments);
@@ -40,19 +40,19 @@ console.error = function () {
         allArgsForError.push(console.trace());
     }   
     logWithType('ERROR', allArgsForError);
-}
+};
 
 console.info = function () {
     window.originalConsoleInfo.apply(this, arguments);
     var allArgs = arguments;
     logWithType('INFO', allArgs);
-}
+};
 
 console.debug = function () {
     window.originalConsoleDebug.apply(this, arguments);
     var allArgs = arguments;
     logWithType('DEBUG', allArgs);
-}
+};
 
 window.logflush =  1;
 
