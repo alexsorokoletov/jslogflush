@@ -17,7 +17,7 @@ if (!('logflush' in window)) {
 (function() {
 
 window.logflush = {
-    log: function(s) {
+    log: function(s, t = '') {
         if (arguments.length <= 1) {
             if (typeof s == 'undefined')
 			{
@@ -25,23 +25,23 @@ window.logflush = {
 			}
             else if (typeof s == 'object')
 			{
-				window.oldsole.log(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
+				window.oldsole.log(JSON.stringify(s) + ' ' + t + JSON.stringify(arguments));
 				log(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
 			}
 			else
 			{
-				window.oldsole.log(s + ' ' + JSON.stringify(arguments));
+				window.oldsole.log(s + ' ' + t + JSON.stringify(arguments));
 				log(s + ' ' + JSON.stringify(arguments));
 			}
         }
 		else if (typeof s == 'object')
 			{
-				window.oldsole.log(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
+				window.oldsole.log(JSON.stringify(s) + ' ' + t + JSON.stringify(arguments));
 				log(JSON.stringify(s) + ' ' + JSON.stringify(arguments));
 			}
 			else
 			{
-				window.oldsole.log(s + ' ' + JSON.stringify(arguments));
+				window.oldsole.log(s + ' ' + t + JSON.stringify(arguments));
 				log(s + ' ' + JSON.stringify(arguments));
 			}
     },
