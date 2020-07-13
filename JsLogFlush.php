@@ -18,31 +18,31 @@ if (!('logflush' in window)) {
 
 window.logflush = {
     log: function(s) {
-		window.oldsole.log(`${s} ${JSON.stringify(arguments)}`);
+		window.oldsole.log(s + ' ' + JSON.stringify(arguments));
         if (arguments.length <= 1) {
             if (typeof s == 'undefined') flushEx();
             else log(s);
             return;
         }
-        log(`${s} ${JSON.stringify(arguments)}`);
+        log(s + ' ' + JSON.stringify(arguments));
     },
 	warn: function(s) {
-		window.oldsole.warn(`${s} ${JSON.stringify(arguments)}`);
+		window.oldsole.warn(s + ' ' + JSON.stringify(arguments));
         if (arguments.length <= 1) {
             if (typeof s == 'undefined') flushEx();
             else log(s);
             return;
         }
-        log(`${s} ${JSON.stringify(arguments)}`);
+        log(s + ' ' + JSON.stringify(arguments));
     },
 	error: function(s) {
-		window.oldsole.error(`${s} ${JSON.stringify(arguments)}`);
+		window.oldsole.error(s + ' ' + JSON.stringify(arguments));
         if (arguments.length <= 1) {
             if (typeof s == 'undefined') flushEx();
             else log(s);
             return;
         }
-        log(`${s} ${JSON.stringify(arguments)}`);
+        log(s + ' ' + JSON.stringify(arguments));
     }
 };
 <%SUBST_CONSOLE%>
