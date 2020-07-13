@@ -28,6 +28,30 @@ window.logflush = {
         log(s.replace(/%[difso]/g, function(m) {
             return i < n? outExpr(aArg[i++]) : m;
         }));
+    },
+	warn: function(s) {
+        if (arguments.length <= 1) {
+            if (typeof s == 'undefined') flushEx();
+            else log(s);
+            return;
+        }
+        var aArg = Array.prototype.slice.call(arguments, 1),
+            n = aArg.length, i = 0;
+        log(s.replace(/%[difso]/g, function(m) {
+            return i < n? outExpr(aArg[i++]) : m;
+        }));
+    },
+	error: function(s) {
+        if (arguments.length <= 1) {
+            if (typeof s == 'undefined') flushEx();
+            else log(s);
+            return;
+        }
+        var aArg = Array.prototype.slice.call(arguments, 1),
+            n = aArg.length, i = 0;
+        log(s.replace(/%[difso]/g, function(m) {
+            return i < n? outExpr(aArg[i++]) : m;
+        }));
     }
 };
 <%SUBST_CONSOLE%>
@@ -129,8 +153,7 @@ CODE;
         (window.ActiveXObject? new ActiveXObject('Microsoft.XMLHTTP') : null);
     if (!oReq) return;
     oReq.onreadystatechange = function() {
-        if (oReq.readyState == 4 && oReq.status == 200 && oReq.responseText)
-            onResponse(oReq.responseText);
+
     };
     oReq.open('POST', URL, true);
     oReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -139,7 +162,7 @@ CODE;
 
     const JS_FN_SEND_PAD = <<<CODE
     var script = document.createElement('script');
-    script.src = URL+ '?'+ query+ '&callback=onResponse&_='+ now();
+    script.src = URL+ '?'+ query+ '&_='+ now();
     document.body.appendChild(script);
 CODE;
 
